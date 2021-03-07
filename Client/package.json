@@ -4,7 +4,8 @@
   "description": "",
   "main": "../Client/GetImage.js",
   "dependencies": {
-    "open": "^7.4.0"
+    "open": "^7.4.0",
+    "opn": "^6.0.0"
   },
   "devDependencies": {},
   "author": "enter your name here",

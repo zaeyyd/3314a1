@@ -6,12 +6,8 @@ let imageCount = Buffer.alloc(1); // 5 BIT: 0 - 31
 let seqNum = Buffer.alloc(2); // 15 BIT: first packet is chosen randomly, then i++, mod2^15 increment
 let timeStamp = Buffer.alloc(4); // 32 BIT:
 
-//payload
-// let imageType = Buffer.alloc(1) // 4 BIT: 1 = BMP, 2 = JPEG, 3 = GIF, 4 = PNG, 5 = TIFF, 15 = RAW
-// let fileNameSize = Buffer.alloc(2) // 12 BIT: number of bytes to store image file name
-// let imageName = Buffer.alloc(4) // 32 BIT: stores the name of the image without extension
-// let imageSize = Buffer.alloc(2) // 16 BIT:
-let imageData;
+
+let bufferArr = []
 
 let packet;
 
@@ -29,18 +25,22 @@ module.exports = {
 
     timeStamp.writeUInt32BE(ts);
 
-    imageData = payload;
+    console.log("from ITP res")
+    console.log(version, fullfilled, resType, imageCount, seqNum, timeStamp)
 
-    packet = Buffer.concat(
-      [version, fullfilled, resType, imageCount, seqNum, timeStamp, imageData],
-      version.length +
-        fullfilled.length +
-        resType.length +
-        imageCount.length +
-        seqNum.length +
-        timeStamp.length +
-        imageData.length
-    );
+    bufferArr = [version, fullfilled, resType, imageCount, seqNum, timeStamp]
+
+    for(img of payload){
+      bufferArr.push(img)
+    }
+
+
+
+
+
+
+
+    packet = Buffer.concat(bufferArr);
   },
   getPacket: function () {
     return packet;
