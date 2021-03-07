@@ -1,24 +1,30 @@
+const { time } = require("console");
 
-// Some code need to be added here, that are common for the module
+let timeStamp = 0
+let seqNum = Math.floor(Math.random() * maxSeq) 
+let maxTime = Math.pow(2,32)
+let maxSeq = Math.pow(2,15)
 
 module.exports = {
     init: function() {
-       // init function needs to be implemented here //
+        
     },
 
-    //--------------------------
-    //getSequenceNumber: return the current sequence number + 1
-    //--------------------------
+ 
     getSequenceNumber: function() {
-      // Enter your code here //
-        return "this should be a correct sequence number";
+        if(seqNum < maxSeq){
+            return seqNum++
+        }
+        else{
+            seqNum = 0
+            return seqNum
+        }
+
     },
 
-    //--------------------------
-    //getTimestamp: return the current timer value
-    //--------------------------
+
     getTimestamp: function() {
-        return "this should be a correct timestamp";
+        return timeStamp
     }
 
 
