@@ -156,6 +156,9 @@ client.on("data", async (dataF) => {
   
   
   }
+  console.log('DISCONNECTED FROM THE SERVER')
+  console.log("CONNECTION CLOSED")
+  client.destroy();
     }
 
   }

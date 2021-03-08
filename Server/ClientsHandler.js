@@ -15,6 +15,9 @@ module.exports = {
     //console.log("CLIENT IS JOINING");
 
     sock.on("data", async function (data) {
+
+      let ex = []
+      let names = []
         
       //console.log("DATA FROM CLIENT ",data);
 
@@ -69,6 +72,8 @@ module.exports = {
             imgType = "raw";
           }
 
+          ex.push(imgType)
+
           // file size
           let fileNameSize = payload.slice(pointer + 1, pointer + 3);
           fileNameSize = fileNameSize.readUInt16BE();
@@ -81,6 +86,8 @@ module.exports = {
           );
 
           let fullName = imgFileName + "." + imgType;
+
+          names.push(imgFileName.toString())
 
           //console.log(fullName);
 
@@ -162,6 +169,16 @@ module.exports = {
    
         // bundle up in ITP Packet 
         ITPpacket.init(version, fullfilment, fullfilment, imgCount, seqNum, timeStamp, images);
+
+        console.log("CLIENT CONNECTED @ ", timeStamp)
+        console.log("CLIENT ", seqNum)
+        console.log("     -- ITP VERSION = ", version)
+        console.log("     -- IMAGE COUNT = ", imgCount)
+        console.log("     -- REQUEST TYPE = Query") 
+        console.log("     -- FILE EXTENSIONS = ", ex)
+        console.log("     -- FILE NAMES = ", names)
+
+
         let packet = ITPpacket.getPacket();
         //console.log(packet.length)
         let lenBuff = Buffer.alloc(4)
@@ -169,6 +186,8 @@ module.exports = {
         //console.log(lenBuff)
 
         sock.write(Buffer.concat([lenBuff, packet]));
+
+        console.log("CLIENT "+seqNum+" DISCONNECTED")
 
       }
     });
