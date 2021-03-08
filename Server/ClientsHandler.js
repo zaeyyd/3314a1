@@ -12,11 +12,11 @@ let ImgDataB
 
 module.exports = {
   handleClientJoining: function (sock) {
-    console.log("CLIENT IS JOINING");
+    //console.log("CLIENT IS JOINING");
 
     sock.on("data", async function (data) {
         
-      console.log("DATA FROM CLIENT ",data);
+      //console.log("DATA FROM CLIENT ",data);
 
       // breaking up packet
       let version = data.slice(0, 1);
@@ -27,7 +27,7 @@ module.exports = {
 
       let seqNum = singleton.getSequenceNumber();
       let timeStamp = singleton.getTimestamp();
-      console.log(version, reqType, imgCount, seqNum, timeStamp);
+      //console.log(version, reqType, imgCount, seqNum, timeStamp);
 
 
       // processing payload + header
@@ -35,15 +35,15 @@ module.exports = {
       version = version.readUint8();
       reqType = reqType.readUint8();
 
-      console.log(version, reqType, imgCount, seqNum, timeStamp);
-      console.log(payload);
+      //console.log(version, reqType, imgCount, seqNum, timeStamp);
+      //console.log(payload);
 
       if (version != 7) {
-        console.log("wrong");
+        //console.log("wrong");
       } else if (reqType != 0) {
-        console.log("wrong");
+        //console.log("wrong");
       } else if (imgCount > 32) {
-        console.log("wrong");
+        //console.log("wrong");
       } else {
         // processing each image name
 
@@ -82,14 +82,14 @@ module.exports = {
 
           let fullName = imgFileName + "." + imgType;
 
-          console.log(fullName);
+          //console.log(fullName);
 
           let imgDB = fs.readdirSync("./images");
 
           //    FINDING IMAGE IN DB
 
           if (imgDB.includes(fullName)) {
-            console.log("            we got that");
+            //console.log("            we got that");
 
             let imageData;
             let imageSize;
@@ -97,7 +97,7 @@ module.exports = {
             let response = await new Promise((resolve) => {
               fs.readFile("./images/" + fullName, (err, image) => {
                 if (err) {
-                  console.log("error: " + err);
+                  //console.log("error: " + err);
                 }
 
                 imageData = image;
@@ -107,36 +107,36 @@ module.exports = {
               });
             });
 
-            console.log(imageData, imageSize);
+            //console.log(imageData, imageSize);
 
             //  ASSEMBLING IMAGE BUFFFERS FOR PAYLOAD 
 
             //  @@@@@@@@ image type @@@@@@@@@@@@
             imageTypeB.writeUInt8(imgTypeInt)
             let tempIT = Buffer.from(imageTypeB)
-            console.log(tempIT)
+            //console.log(tempIT)
 
             // //  @@@@@@@@ image size @@@@@@@@@@@@
             imageSizeB.writeUInt16BE(imageSize)
             let tempIS = Buffer.from(imageSizeB)
-            console.log(tempIS)
+            //console.log(tempIS)
 
             //  @@@@@@@@ file name size @@@@@@@@@@@@
             fileNameSizeB.writeUInt16BE(fileNameSize)
             let tempFNS = Buffer.from(fileNameSizeB)
-            console.log(tempFNS)
+            //console.log(tempFNS)
 
             //  @@@@@@@@ file name  @@@@@@@@@@@@
-            console.log("file name", imgFileName)
+            //console.log("file name", imgFileName)
 
 
             //  @@@@@@@@ imagedata @@@@@@@@@@@@
-            console.log("actual image")
+            //console.log("actual image")
 
 
             let imagePayload = Buffer.concat([tempIT, tempFNS, tempIS, imgFileName, imageData])
 
-            console.log('one of the images', imagePayload)
+            //console.log('one of the images', imagePayload)
 
             images.push(imagePayload)
 
@@ -147,24 +147,28 @@ module.exports = {
 
 
           } else {
-            console.log("we dont got that rip ;(");
+            //console.log("we dont got that rip ;(");
             fullfilment = 0
           }
 
           imgFileName = imgFileName.toString();
           pointer = pointer + 3 + fileNameSize;
-          console.log(imgType, fileNameSize, imgFileName);
+          //console.log(imgType, fileNameSize, imgFileName);
         }
 
-        console.log("this should be last");
+        //console.log("this should be last");
 
         
    
         // bundle up in ITP Packet 
         ITPpacket.init(version, fullfilment, fullfilment, imgCount, seqNum, timeStamp, images);
         let packet = ITPpacket.getPacket();
-        console.log(packet.length)
-        sock.write(packet);
+        //console.log(packet.length)
+        let lenBuff = Buffer.alloc(4)
+        lenBuff.writeUInt32BE(packet.length)
+        //console.log(lenBuff)
+
+        sock.write(Buffer.concat([lenBuff, packet]));
 
       }
     });

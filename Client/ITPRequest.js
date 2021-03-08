@@ -29,14 +29,14 @@ module.exports = {
       // breaking up name string into relavent parts
       let splitName = img.split(".");
 
-      console.log(splitName);
+      //console.log(splitName);
       let name = splitName[0];
       let type = splitName[1];
       let nameLen = name.length;
 
-      console.log(name);
-      console.log(type);
-      console.log(nameLen);
+      //console.log(name);
+      //console.log(type);
+      //console.log(nameLen);
 
 
       // 1) processing img file type
@@ -62,20 +62,20 @@ module.exports = {
         tempIT = Buffer.from(imgType)
       }
 
-      console.log(tempIT);
+      //console.log(tempIT);
       buffArr.push(tempIT);
 
       // 2) processing img file name size
       fileNameSize.writeUInt16BE(nameLen);
       let tempFNS = Buffer.from(fileNameSize)
-      console.log(tempFNS)
+      //console.log(tempFNS)
       buffArr.push(tempFNS);
 
-      console.log(buffArr)
+      //console.log(buffArr)
 
       // 3) processing img file name
       imgFileName = Buffer.from(name);
-      console.log(imgFileName);
+      //console.log(imgFileName);
       buffArr.push(imgFileName);
 
       // 4) calculating total size of buffer for this image name
@@ -94,7 +94,7 @@ module.exports = {
     );
 
 
-    console.log(packet);
+    //console.log(packet);
   },
 
   getPacket: function () {

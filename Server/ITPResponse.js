@@ -25,8 +25,8 @@ module.exports = {
 
     timeStamp.writeUInt32BE(ts);
 
-    console.log("from ITP res")
-    console.log(version, fullfilled, resType, imageCount, seqNum, timeStamp)
+    //console.log("from ITP res")
+    //console.log(version, fullfilled, resType, imageCount, seqNum, timeStamp)
 
     bufferArr = [version, fullfilled, resType, imageCount, seqNum, timeStamp]
 
